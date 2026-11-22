@@ -1,14 +1,21 @@
-"""Build index.html for the one-case (Eureka) workshop page. Helpers and content are shared with the six-case page."""
+"""Build the participant page (index.html) and the presenter page (presenter/index.html) for the Eureka workshop. Helpers and content are shared with the six-case page."""
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123e5'
+V = '20261123s2'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
+import copy
+# Participant copy: the same records, with classroom and teacher wording taken out.
+EUP = copy.deepcopy(EU)
+EUP['country'] = 'This file is about the Eureka Stockade at Ballarat, on Wadawurrung Country. Some linked accounts of the battle describe wounds and deaths in detail.'
+EUP['evidence'][4]['kind'] = 'Diary · 1853–1855'
+EUP['evidence'][4]['cite'] = 'State Library Victoria, “An eyewitness account of the Eureka Stockade”. Once wrongly said to be by Samuel Lazarus. It records a death.'
+EUP['inquiry']['silences'][1] = 'Women of the goldfields, such as Anastasia Hayes, appear in later notices (1892), but no source in this case says she saw the first shot.'
 
 # Year levels are taken from each app's own Teacher Note (Australian Curriculum v9). Teacher-facing only.
 KITS = [
@@ -32,7 +39,7 @@ RUN = [
 ]
 
 def eureka_section():
-    c = EU; cid = 'eureka'
+    c = EUP; cid = 'eureka'
     inq = c['inquiry']
     cols = [('People','people','Who was there? Who speaks, and who is spoken for?'),('Documents','documents','Who made each record, when, and for whom?'),
             ('Silences','silences','What is missing, lost, or never asked?'),('Still unsettled','unsettled','What can the record not settle?')]
@@ -104,17 +111,17 @@ def eureka_section():
    <label><input type="radio" name="{cid}-sure" value="guess" data-key="{cid}-sure"> Guess</label></div>
  </div>
 
- <div class="step"><span class="step-n">+</span><h3>Super Sleuths <small>after the session</small></h3></div>
+ <div class="step"><span class="step-n">+</span><h3>Super Sleuths <small>go further</small></h3></div>
  <ul class="sleuths">{''.join('<li>%s</li>' % e(s) for s in c['sleuths'])}</ul>
 
  <div class="app-card">
   <figure class="qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/{app_qr}" alt="QR code that opens {e(app_t)}"></button></figure>
   <div><p class="env-eyebrow">The full case app</p><h4>{e(app_t)}</h4>
-  <p>The app has the whole case: the opening page, the witnesses, My finding, Super Sleuths and a Teacher Note. Scan the code or use the link.</p>
+  <p>The app has the whole case: the opening page, the witnesses, My finding and Super Sleuths. Scan the code or use the link.</p>
   <p><a class="btn btn-primary" href="{e(app_u)}" target="_blank" rel="noopener">Open the app ↗</a> <span class="url">{e(app_u.replace('https://',''))}</span></p></div>
  </div>
  <p class="credits"><strong>Pictures.</strong> {e(c['credits'])}</p>
- <p class="case-nav"><a class="btn btn-quiet" href="#takeaways">Next: take-aways for every year level →</a></p>
+ <p class="case-nav"><a class="btn btn-quiet" href="#bias">Next: the Bias Button →</a></p>
 </section>'''
 
 def kit(cid, yr, curric, pdf):
@@ -131,11 +138,22 @@ def kit(cid, yr, curric, pdf):
   <span class="url">{e(u.replace('https://',''))}</span></div></div>
  </div></article>'''
 
+def explore(cid):
+    c = C[cid]; t, u, q = c['app']; src, cap = c['tile_img']
+    return f'''<article class="kit" style="--case:{c['colour']}">
+ <div class="kit-top"><button type="button" class="zoom-btn kit-zoom" aria-label="Enlarge picture"><img class="kit-pic" src="assets/{src}" alt="{e(cap)}" loading="lazy"></button></div>
+ <div class="kit-body">
+  <p class="kit-dates">{e(c['dates'])}</p><h3>{e(c['title'])}</h3><p class="kit-q">{e(c['question'])}</p>
+  <div class="kit-row"><figure class="kit-qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/{q}" alt="QR code that opens {e(t)}"></button></figure>
+  <div class="kit-links"><a class="btn btn-primary" href="{e(u)}" target="_blank" rel="noopener">Open the case ↗</a>
+  <span class="url">{e(u.replace('https://',''))}</span></div></div>
+ </div></article>'''
+
 def page():
     bias_cards = ''.join(f'<article class="inv"><h4>{e(t)}</h4><p>{e(d)}</p><p class="note">Sources include {e(s)} <a href="{u}" target="_blank" rel="noopener">{e(lt)} ↗</a></p></article>' for t,d,s,u,lt in BIAS_INV)
     run_rows = ''.join(f'<tr><th scope="row"><span class="rs-n">{i+1}</span> {e(n)}</th><td class="t">{a} min</td><td class="t">{b} min</td><td>{e(d)}</td></tr>' for i,(n,a,b,d) in enumerate(RUN))
     tot_a = sum(r[1] for r in RUN); tot_b = sum(r[2] for r in RUN)
-    kits = ''.join(kit(*k) for k in KITS)
+    explores = ''.join(explore(k[0]) for k in KITS)
     return f'''<!doctype html>
 <html lang="en-AU">
 <head>
@@ -143,8 +161,8 @@ def page():
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="googlebot" content="noindex, nofollow">
-<title>Reopen the Record · Eureka: a guided investigation</title>
-<meta name="description" content="A guided investigation for the whole room: reopen the Eureka file, read real records, ask three witnesses, press the Bias Button, and decide. Six case files to take away.">
+<title>Reopen the Record · Eureka: who fired first?</title>
+<meta name="description" content="Reopen the Eureka file: read real records, ask three witnesses, press the Bias Button, and decide. Then explore five more case files.">
 <script>document.documentElement.classList.add("js")</script>
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/image-fit.css?v={V}">
@@ -158,7 +176,7 @@ def page():
  <h1 class="pc-title">Eureka</h1>
  <p class="pc-q">{e(EU['question'])}</p>
  <p class="pc-tag">Real people. Real records. Real questions the record never settled.</p>
- <div class="pc-qrs"><figure><img class="pc-qr-case" src="assets/qr/eureka-qr.png" alt=""><figcaption>The full Eureka app</figcaption></figure><figure><img src="assets/qr/bias-button-qr.png" alt=""><figcaption>The Bias Button</figcaption></figure><figure><img src="assets/qr/workshop-qr.png" alt=""><figcaption>All six case files</figcaption></figure></div>
+ <div class="pc-qrs"><figure><img class="pc-qr-case" src="assets/qr/eureka-qr.png" alt=""><figcaption>The full Eureka app</figcaption></figure><figure><img src="assets/qr/bias-button-qr.png" alt=""><figcaption>The Bias Button</figcaption></figure><figure><img src="assets/qr/workshop-eureka-qr.png" alt=""><figcaption>This page: explore all six cases</figcaption></figure></div>
  <p class="pc-note">Investigator: ______________________________ &nbsp; Date: ______________</p>
  <p class="pc-small">This file includes histories of First Nations peoples. Aboriginal and Torres Strait Islander readers are advised that it names people who have died. No photographs of them are used. Sources are cited with their links. Your answers stay on your device unless you print them.</p>
 </div>
@@ -166,10 +184,10 @@ def page():
 <header class="topbar">
  <div class="topbar-in">
   <a class="brand" href="#top">Reopen the Record<small>Eureka · a guided investigation</small></a>
-  <nav aria-label="Workshop sections"><a href="#session">The session</a><a href="#case-eureka">Eureka file</a><a href="#bias">Bias Button</a><a href="#takeaways">Take-aways</a><a href="#classroom">Teachers</a></nav>
+  <nav aria-label="Sections"><a href="#how">How it works</a><a href="#case-eureka">Eureka file</a><a href="#bias">Bias Button</a><a href="#explore">Explore more</a></nav>
  </div>
 </header>
-<p class="banner">This workshop includes histories of First Nations peoples and of colonial violence. Aboriginal and Torres Strait Islander participants are advised that it names people who have died. It shows no photographs of them: silhouettes are used. It retells no cultural stories and shows no rock art. Some linked sources use the racist language of their time; they carry a content note. If something here should be corrected, please tell the workshop presenter, so the file can be updated.</p>
+<p class="banner">This workshop includes histories of First Nations peoples and of colonial violence. Aboriginal and Torres Strait Islander participants are advised that it names people who have died. It shows no photographs of them: silhouettes are used. It retells no cultural stories and shows no rock art. Some linked sources use the racist language of their time; they carry a content note. If something here should be corrected, please let us know, so the file can be updated.</p>
 
 <main id="main">
 <section class="hero hero-eureka" id="top" aria-labelledby="h-title">
@@ -183,7 +201,7 @@ def page():
      <h1 id="h-title">Eureka</h1>
      <p class="env-sub">{e(EU['question'])}</p>
      <p class="tagline">Real people. Real records. Real questions the record never settled.</p>
-     <div class="hero-actions"><a class="btn btn-primary" href="#case-eureka">Open the Eureka file</a><a class="btn" href="#session">The session</a><a class="btn btn-quiet" href="#takeaways">All six cases</a></div>
+     <div class="hero-actions"><a class="btn btn-primary" href="#case-eureka">Open the Eureka file</a><a class="btn" href="#how">How it works</a><a class="btn btn-quiet" href="#explore">Explore more</a></div>
     </div>
     <div class="env-pic">{pic(EU['tile_img'][0], EU['tile_img'][1])}</div>
    </div>
@@ -196,27 +214,17 @@ def page():
 <section class="brief wrap" aria-labelledby="h-brief">
  <div class="memo">
   <p class="memo-head" id="h-brief">Briefing</p>
-  <p>In this guided investigation, you step into the role of investigator. Together, the whole room reopens one Australian history case file: <strong>Eureka</strong>, Ballarat, 1854.</p>
-  <p>Using primary sources, evidence cards, three witnesses and a Bias Button activity, you will reopen the record in a culturally appropriate and apolitical way. You will examine different perspectives and publicly available records, through specific inquiry questions that explore the people, documents, silences, and questions the official story never fully settled.</p>
-  <p>By the end of the session you will leave with the Eureka case file, the Bias Button activity, a ready-to-use approach for immediate classroom use, and links to all six case files (Deep Time, Batavia, Eureka, Federation, Freedom Ride and Frontier) for the year levels you teach.</p>
+  <p>In this guided investigation, you step into the role of investigator and reopen one Australian history case file together: <strong>Eureka</strong>, Ballarat, 1854.</p>
+  <p>Using primary sources, evidence cards, three witnesses and the Bias Button, you will reopen the record in a culturally appropriate and apolitical way, through questions about the people, documents, silences, and questions the official story never fully settled.</p>
+  <p>You will leave with your Eureka case file, the Bias Button, and links to all six case files: Deep Time, Batavia, Eureka, Federation, Freedom Ride and Frontier.</p>
   <p class="closing">Real people. Real records. Real questions the record never settled.</p>
   <p class="closing closing-2">What a terrible thing to lose.</p>
  </div>
 </section>
 
-<section class="why wrap" aria-labelledby="h-why">
- <p class="eyebrow">Why one case in the room</p>
- <h2 id="h-why">One file, opened properly.</h2>
- <div class="why-grid">
-  <article class="why-card"><span class="why-n">1</span><h3>Focus</h3><p>A guided investigation needs focus. Switching cases mid-session dilutes the “reopen the file” experience.</p></article>
-  <article class="why-card"><span class="why-n">2</span><h3>It fits the time</h3><p>Envelope, evidence cards, three witnesses, Bias Button, finding: one case fits 45–60 minutes. Several cases do not.</p></article>
-  <article class="why-card"><span class="why-n">3</span><h3>You see how it scales</h3><p>Every case file is built the same way. Work through one and you can see how the other five run, from Year 4 to Year 10.</p></article>
- </div>
-</section>
-
-<section class="session wrap" id="session" aria-labelledby="h-session">
- <p class="eyebrow">The guided session</p>
- <h2 id="h-session">Read. Ask. Decide.</h2>
+<section class="session wrap" id="how" aria-labelledby="h-how">
+ <p class="eyebrow">How the investigation works</p>
+ <h2 id="h-how">Read. Ask. Decide.</h2>
  <div class="rad">
   <article class="rad-card"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="6" width="40" height="52" rx="3" fill="#fbf3e6" stroke="#4a2e1b" stroke-width="3"/><path d="M20 18h24M20 26h24M20 34h24M20 42h14" stroke="#4a2e1b" stroke-width="3"/></svg>
    <h3>Read</h3><p>Open the envelope and the evidence cards: an official report, a letter to the newspapers, an eyewitness book, the first Melbourne report and a diary.</p></article>
@@ -226,14 +234,7 @@ def page():
    <h3>Decide</h3><p>Write your finding and the one piece of evidence behind it. Say how sure you are. <strong>“We can’t know”</strong> is a fair finding when the record will not support more.</p></article>
  </div>
  <div class="cant-know"><span class="stamp stamp-flat">We can’t know</span><p>Sometimes the most honest finding. At Eureka, the people who were there still disagreed about the first shot. Saying what the record cannot tell us is part of the work.</p></div>
-
- <h3 class="sub">Run sheet for the presenter</h3>
- <div class="run-wrap"><table class="run">
-  <thead><tr><th scope="col">Step</th><th scope="col" class="t">Full</th><th scope="col" class="t">Condensed</th><th scope="col">What happens</th></tr></thead>
-  <tbody>{run_rows}</tbody>
-  <tfoot><tr><th scope="row">In all</th><td class="t">about {tot_a} min</td><td class="t">about {tot_b} min</td><td>Everyone works through the same steps together.</td></tr></tfoot>
- </table></div>
- <p class="note">Timings are suggestions. For a 60-minute slot, add five minutes of questions at the end. In the condensed version, give each pair one evidence card and one witness, and hear the other answers from the room. Typed answers stay in each person’s browser, on their own device only.</p>
+ <p class="note">Your typed answers stay in this browser, on this device only. Nothing is sent anywhere.</p>
 </section>
 
 <div class="wrap cases-wrap">
@@ -242,7 +243,7 @@ def page():
 
 <section class="bias-sec" id="bias" aria-labelledby="h-bias">
  <div class="wrap">
-  <p class="eyebrow">The Bias Button activity · take it further</p>
+  <p class="eyebrow">The Bias Button · go further</p>
   <h2 id="h-bias">A word can hide an act.</h2>
   <div class="bias-grid">
    <div>
@@ -259,41 +260,193 @@ def page():
    </article>
   </div>
   <h3 class="sub">Four investigations in the Bias Button app</h3>
-  <p class="note">The first two are about racism in historical sources, the core of the app. The next two use the same button on gender, wartime and class. Each has a modern comparison chosen in class: a real, dated, published example, never an invented one, and never one that names a private person. Some sources use racist, sexist or violent language; the app carries content notes and quotes only short extracts.</p>
+  <p class="note">The first two are about racism in historical sources, the core of the app. The next two use the same button on gender, wartime and class. Each ends with a modern comparison: a real, dated, published example, never an invented one, and never one that names a private person. Some sources use racist, sexist or violent language; the app carries content notes and quotes only short extracts.</p>
   <div class="inv-grid">{bias_cards}</div>
   <div class="app-card">
    <figure class="qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/qr/bias-button-qr.png" alt="QR code that opens The Bias Button"></button></figure>
-   <div><p class="env-eyebrow">The full activity</p><h4>The Bias Button</h4><p>Four investigations, each with Read, Ask and a finding, plus Super Sleuths and a Teacher Note.</p>
+   <div><p class="env-eyebrow">The full activity</p><h4>The Bias Button</h4><p>Four investigations, each with Read, Ask and a finding, plus Super Sleuths.</p>
    <p><a class="btn btn-primary" href="https://robmac10.github.io/bias-button/" target="_blank" rel="noopener">Open the Bias Button ↗</a> <span class="url">robmac10.github.io/bias-button/</span></p></div>
   </div>
  </div>
+</section>
+
+<section class="kits-sec" id="explore" aria-labelledby="h-explore">
+ <div class="wrap">
+  <p class="eyebrow">Explore more</p>
+  <h2 id="h-explore">Six case files. Reopen another.</h2>
+  <p class="kits-lead">Every case is built the same way: an envelope, evidence cards, three witnesses, the Bias Button and a finding. Scan a code or tap a link to open the full case.</p>
+  <div class="kits">{explores}</div>
+  <div class="mine">
+   <h3>Your Eureka case file</h3>
+   <p>Press the button, then choose <em>Save as PDF</em> in the print window to keep it. It prints with a cover, the evidence, your answers, the Bias Button and the links to all six cases.</p>
+   <p><button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my Eureka case file</button> <a class="btn" href="assets/pdf/take-away-case-file-eureka.pdf" download>Blank Eureka case file (PDF) ↓</a></p>
+   <p class="note"><button type="button" class="linkish" id="clear-all">Clear all my answers on this device</button></p>
+  </div>
+ </div>
+</section>
+
+</main>
+
+<footer class="foot">
+ <div class="wrap">
+  <p><strong>Reopen the Record: Australian Histories</strong> · Eureka: who fired first?</p>
+  <p>Real, cited sources only. No invented quotes, outcomes or faces. Portraits are public-domain images of named public figures; other people are shown as labelled silhouettes. The opening illustration is a drawn scene of an archive desk, made for this page; it is not a historical image.</p>
+  <p>Eureka sources are held by, among others: Public Record Office Victoria, State Library Victoria, the National Library of Australia (Trove) and Wikisource. The other case files cite the National Archives of Australia, the Federal Register of Legislation, AIATSIS, the National Museum of Australia, the Western Australian Museum, the State Library of Western Australia, the Nationaal Archief, AustLII, the Internet Archive, UNESCO, the Australian War Memorial, ABC News and the Friends of Myall Creek Memorial.</p>
+  <p>Search engines are asked not to index this page. If something here should be corrected, please let us know, so the file can be updated.</p>
+ </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden><button type="button" class="lb-close" aria-label="Close">×</button><img alt=""><p class="lb-cap"></p></div>
+<script src="assets/app.js?v={V}"></script>
+</body>
+</html>
+'''
+
+
+# ---------------- Presenter page (presenter/index.html; not linked from the participant page) ----------------
+# Each step: (prompts to the room, what the cited sources support). Drawn only from the case's cited records
+# and the Who Fired First? app's Teacher Note.
+GUIDE = [
+ ('Open the envelope',
+  ['Read the opener aloud. Ask: what do we think we already know about Eureka? Write it up, to test at the end.',
+   'Words to check: licence, stockade, sentry, signal shot, volley.'],
+  ['Every record agrees there was shooting before dawn on 3 December 1854. The dispute is who started it.',
+   'Captain Thomas led 276 men (100 mounted, 176 on foot). Inside the stockade there were far fewer diggers.']),
+ ('Read what is agreed',
+  ['Which of these facts would every witness accept? Which detail is still disputed?'],
+  ['The licence burning and the Southern Cross flag on Bakery Hill (29 November) and Lalor’s oath (30 November) are agreed.',
+   'The exact time the force left the Camp, and the time of the attack, are disputed: witnesses disagree.',
+   'Thirteen men, including Carboni, were tried for high treason in 1855. All were found not guilty.']),
+ ('Evidence cards',
+  ['For each card: who made it, when, for whom, and were they there?',
+   'Which card was written closest to the event? Which was written for the public?'],
+  ['A. Thomas wrote the same day, to his superiors. He says his men were fired on “without word or challenge”, and that only then did he order “commence firing”. He does not mention a warning shot from a sentry.',
+   'B. Lalor wrote four months later, to the newspapers: “I believe that one or two signal shots were fired by our sentries”, and “The military fired the first volley.” He separates a signal shot from a volley, and hedges with “I believe”.',
+   'C. Carboni, a year later: he woke to “a discharge of musketry—then a round from the bugle”. He does not say which side fired.',
+   'D. The Argus of 4 December was the first report in Melbourne. No complete set of the Ballarat Times from 1854 survives.',
+   'E. The State Library Victoria diary was once wrongly credited to Samuel Lazarus; it is now attributed to Charles Evans. It records a death: preview it before sharing.']),
+ ('Three witnesses',
+  ['What did they say they saw? Could they really have seen it? Why might they say it?',
+   'Where was each witness standing, and what could they not see in the half-light?'],
+  ['Lalor was inside the stockade, as the diggers’ leader. Thomas commanded the attacking force outside it. Carboni was asleep in a tent “the second from the stockade”.',
+   'Strong answers notice that Thomas wrote for his superiors, that Lalor chooses careful words, and that Carboni heard the firing but does not name a side.',
+   'When quoting, check the originals: some modern summaries change Lalor’s “fifteen yards” to “fifteen feet” and his “twenty with pikes” to thirty.']),
+ ('Bias Button',
+  ['Who made it, and why? Who is missing? What are the loaded words doing? What does it want you to think or do?',
+   'Ask for one loaded word and one missing voice from the room.'],
+  ['Thomas calls the diggers “insurgents”. Lalor writes “our sentries”. Each word places the writer on a side.',
+   'Missing voices: the sentries are never named; the women of the goldfields appear only in later notices. No source in this case says Anastasia Hayes saw the first shot.']),
+ ('Decide: our finding',
+  ['Rebels, soldiers, or we can’t know: which piece of evidence most changed your mind? How sure are you?'],
+  ['There is no answer key. Historians still disagree about who fired first.',
+   'Strong findings use more than one witness, separate a signal shot from a volley, say who could see what, and say how sure they are. “We can’t know” is a legitimate finding.',
+   'Nobody knows exactly how many died: diggers, soldiers, and at least one woman.']),
+ ('Close the file',
+  ['Return to the list from the start. What changed? What would we need to settle the question?',
+   'How did Eureka affect the way the colony was governed?'],
+  ['The stockade was taken in minutes. Lalor was badly wounded and hidden by friends. The thirteen accused were found not guilty. The licence was soon replaced, and Lalor was later elected to Victoria’s parliament.']),
+]
+
+def kit_p(cid, yr, curric, pdf):
+    return kit(cid, yr, curric, pdf)
+
+def presenter_page():
+    run_rows = ''.join(f'<tr><th scope="row"><span class="rs-n">{i+1}</span> {e(n)}</th><td class="t">{a} min</td><td class="t">{b} min</td><td>{e(d)}</td></tr>' for i,(n,a,b,d) in enumerate(RUN))
+    tot_a = sum(r[1] for r in RUN); tot_b = sum(r[2] for r in RUN)
+    guide = ''.join(f"""<article class="g-step"><div class="g-head"><span class="rs-n">{i+1}</span><h3>{e(n)}</h3><span class="g-time">{RUN[i][1]} min · condensed {RUN[i][2]} min</span></div>
+ <div class="g-cols"><div class="g-ask"><h4>Ask the room</h4><ul>{''.join('<li>%s</li>' % e(x) for x in pr)}</ul></div>
+ <div class="g-ans"><h4>What the sources support</h4><ul>{''.join('<li>%s</li>' % e(x) for x in an)}</ul></div></div></article>""" for i,(n,pr,an) in enumerate(GUIDE))
+    kits = ''.join(kit_p(*k) for k in KITS)
+    html_ = f"""<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Presenter notes · Reopen the Record · Eureka</title>
+<script>document.documentElement.classList.add("js")</script>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/image-fit.css?v={V}">
+<link rel="stylesheet" href="assets/style.css?v={V}">
+<link rel="stylesheet" href="assets/eureka.css?v={V}">
+</head>
+<body class="presenter-page">
+<a class="skip" href="#main">Skip to the notes</a>
+<header class="topbar">
+ <div class="topbar-in">
+  <a class="brand" href="#top">Reopen the Record<small>Presenter notes · Eureka</small></a>
+  <nav aria-label="Presenter sections"><a href="#run">Run sheet</a><a href="#guide">Step by step</a><a href="#takeaways">Take-aways</a><a href="#teacher">Teacher Note</a></nav>
+ </div>
+</header>
+<main id="main">
+<section class="p-head wrap" id="top" aria-labelledby="h-p">
+ <div class="folder" style="--case:#2c4a7a">
+  <span class="folder-tab">Presenter</span><span class="string" aria-hidden="true"></span>
+  <div class="folder-grid">
+   <div>
+    <p class="env-eyebrow">Reopen the Record · Eureka, Ballarat, 1854</p>
+    <h1 id="h-p">Presenter notes</h1>
+    <p class="key-q">One case in the room: everyone reopens Eureka together. Six case files to take away.</p>
+    <div class="case-actions">
+     <button type="button" class="btn btn-primary" id="print-presenter">Download / print presenter notes</button>
+     <a class="btn" href="assets/pdf/presenter-notes-eureka.pdf" download>Presenter notes (PDF) ↓</a>
+     <a class="btn btn-quiet" href="../" target="_blank" rel="noopener">Open the participant page ↗</a>
+    </div>
+   </div>
+   <figure class="qr p-qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/qr/workshop-eureka-qr.png" alt="QR code that opens the participant page"></button><figcaption>Show this code to the room: it opens the participant page.</figcaption></figure>
+  </div>
+ </div>
+ <p class="note">This page is for the presenter. It is not linked from the participant page, and search engines are asked not to index it.</p>
+</section>
+
+<section class="why wrap" aria-labelledby="h-why">
+ <p class="eyebrow">Why one case in the room</p>
+ <h2 id="h-why">One file, opened properly.</h2>
+ <div class="why-grid">
+  <article class="why-card"><span class="why-n">1</span><h3>Focus</h3><p>A guided investigation needs focus. Switching cases mid-session dilutes the “reopen the file” experience.</p></article>
+  <article class="why-card"><span class="why-n">2</span><h3>It fits the time</h3><p>Envelope, evidence cards, three witnesses, Bias Button, finding: one case fits 45–60 minutes. Several cases do not.</p></article>
+  <article class="why-card"><span class="why-n">3</span><h3>Teachers see how it scales</h3><p>Every case file is built the same way. Work through one and teachers can see how the other five run, from Year 4 to Year 10.</p></article>
+ </div>
+</section>
+
+<section class="session wrap" id="run" aria-labelledby="h-run">
+ <p class="eyebrow">Run sheet</p>
+ <h2 id="h-run">Suggested timings</h2>
+ <div class="run-wrap"><table class="run">
+  <thead><tr><th scope="col">Step</th><th scope="col" class="t">Full</th><th scope="col" class="t">Condensed</th><th scope="col">What happens</th></tr></thead>
+  <tbody>{run_rows}</tbody>
+  <tfoot><tr><th scope="row">In all</th><td class="t">about {tot_a} min</td><td class="t">about {tot_b} min</td><td>Everyone works through the same steps together.</td></tr></tfoot>
+ </table></div>
+ <p class="note">Timings are suggestions. For a 60-minute slot, add five minutes of questions at the end.</p>
+ <div class="presenter"><strong>Condensed option (optional).</strong> Give each pair one evidence card and one witness, then hear the other answers from the room. Everyone still presses the Bias Button and writes a finding.</div>
+</section>
+
+<section class="guide wrap" id="guide" aria-labelledby="h-guide">
+ <p class="eyebrow">Step by step</p>
+ <h2 id="h-guide">Prompts and answer guidance</h2>
+ <p class="note">The guidance uses only the records cited in the case file and the Who Fired First? app’s Teacher Note. It is not an answer key: the record does not settle who fired first.</p>
+ <div class="g-list">{guide}</div>
 </section>
 
 <section class="kits-sec" id="takeaways" aria-labelledby="h-kits">
  <div class="wrap">
   <p class="eyebrow">Take-aways for teachers</p>
   <h2 id="h-kits">Six case files. Pick your year level.</h2>
-  <p class="kits-lead">Today you opened Eureka. Every case below is built the same way: envelope, evidence cards, three witnesses, Bias Button, finding. Each has a full app, a QR code and a printable case file. Year levels are suggestions, taken from each app’s own Teacher Note (Australian Curriculum v9); the same structure works from Year 4 to Year 10.</p>
+  <p class="kits-lead">Every case is built the same way: envelope, evidence cards, three witnesses, Bias Button, finding. Each has a full app, a QR code and a printable case file. Year levels are suggestions, taken from each app’s own Teacher Note (Australian Curriculum v9). The printable case files include a classroom routine and a Teacher Note.</p>
   <div class="kits">{kits}</div>
   <div class="app-card all-card">
    <figure class="qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/qr/workshop-qr.png" alt="QR code that opens the full workshop page with all six case files"></button></figure>
-   <div><p class="env-eyebrow">The full workshop page</p><h4>All six case files, ready to use</h4><p>Every case worked through on one page, with evidence cards, witnesses, inquiry questions and a print button for each.</p>
+   <div><p class="env-eyebrow">The full workshop page</p><h4>All six case files, ready to use</h4><p>Every case worked through on one page, with evidence cards, witnesses, inquiry questions, a classroom routine and a print button for each.</p>
    <p><a class="btn btn-primary" href="https://robmac10.github.io/rtr-workshop/" target="_blank" rel="noopener">Open the full workshop page ↗</a> <span class="url">robmac10.github.io/rtr-workshop/</span></p></div>
-  </div>
-  <div class="mine">
-   <h3>Your Eureka case file</h3>
-   <p>Press the button, then choose <em>Save as PDF</em> in the print window to keep it. It prints with a cover, the evidence, your answers, the Bias Button, the classroom approach and these links.</p>
-   <p><button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my Eureka case file</button> <a class="btn" href="assets/pdf/take-away-case-file-eureka.pdf" download>Blank Eureka PDF ↓</a></p>
-   <p class="note"><button type="button" class="linkish" id="clear-all">Clear all my answers on this device</button></p>
   </div>
  </div>
 </section>
 
 <section class="class-sec wrap" id="classroom" aria-labelledby="h-class">
- <p class="eyebrow">Take it to your classroom</p>
+ <p class="eyebrow">Take it to the classroom</p>
  <h2 id="h-class">A ready-to-use approach</h2>
- <div class="presenter"><strong>Presenter note.</strong> The same structure works across Years 4 to 10. Eureka runs well with the whole room; in class, choose the case for your year level, from Deep Time and Batavia (Year 4) to the Freedom Ride (Year 10). <em>Frontier</em> (the Bathurst War and Myall Creek) is suited to Year 8/9.</div>
- <p>The same routine works for every case file and every app in the Reopen the Record family. In a classroom, run it in one long lesson, or split it across two.</p>
+ <div class="presenter"><strong>Presenter note.</strong> The same structure works across Years 4 to 10. Eureka runs well with the whole room; in class, teachers choose the case for their year level, from Deep Time and Batavia (Year 4) to the Freedom Ride (Year 10). <em>Frontier</em> (the Bathurst War and Myall Creek) is suited to Year 8/9.</div>
  <div class="lesson">
   <div class="lesson-step"><span class="ls-time">5 min</span><h4>Open the envelope</h4><p>Read the opener aloud. Ask: what do we think we already know? Write it up, to test later.</p></div>
   <div class="lesson-step"><span class="ls-time">10 min</span><h4>Read the agreed file</h4><p>Students mark what is agreed and what is still disputed. Teach any new words.</p></div>
@@ -304,7 +457,6 @@ def page():
   <div class="lesson-step"><span class="ls-time">5 min</span><h4>Close the file</h4><p>Return to the opening list. What changed? What would we need to settle the question?</p></div>
  </div>
  <p class="note">Suggested classroom timings: about 70 minutes in all. For two lessons, stop after the witnesses.</p>
-
  <h3 class="sub">Investigation roles</h3>
  <div class="roles">
   <div class="role"><h4>Lead Investigator</h4><p>Keeps the case question in front of the team, and keeps time.</p></div>
@@ -313,43 +465,36 @@ def page():
   <div class="role"><h4>Bias Checker</h4><p>Runs the Bias Button and flags loaded words and missing voices.</p></div>
   <div class="role"><h4>Recorder</h4><p>Writes the team’s finding and the “We can’t know” list.</p></div>
  </div>
- <p class="note">Rotate roles between sessions, so every student practises every skill.</p>
 
- <h3 class="sub">Super Sleuths extension</h3>
- <ul class="sleuths"><li>Open the full case app and its Super Sleuths tab: timelines, source packs, sure / maybe / guess, and harder comparisons.</li>
- <li>Find one more real source on Trove, the National Archives, a state library or the Australian War Memorial. Cite it fully. Does it change the finding?</li>
- <li>Swap witnesses with another team and test their finding against your evidence.</li>
- <li>Write a “Case reopened” note: evidence for, evidence against, and what we still can’t know.</li></ul>
-
- <details class="teacher" id="teacher">
+ <details class="teacher" id="teacher" open>
   <summary>Teacher Note</summary>
   <div class="teacher-body">
-   <p><strong>What is true on this page.</strong> Every date, place and quotation comes from the cited records, as already checked for the live Reopen the Record apps, or from the linked public source. Nothing is invented. Several apps open with a page labelled <em>Imagined</em> (a constructed notebook or diary page, based on real events). Those openers are not reproduced here. Tell students which parts of an app are imagined, and ask how they could check.</p>
-   <p><strong>Cultural safety.</strong> Follow the <a href="https://aiatsis.gov.au/research/ethical-research/code-ethics" target="_blank" rel="noopener">AIATSIS Code of Ethics</a> and the protocols of the local communities whose Countries and histories each case concerns. Use only openly shareable, public-record content. There is no secret or sacred material, ceremony, retold cultural story, rock art image or photograph of a deceased Aboriginal or Torres Strait Islander person on this page; silhouettes are used. Seek local guidance before adding community voices, oral histories or images. Keep the advisory notes on student materials.</p>
-   <p><strong>Oral histories.</strong> In the other case files, recorded interviews are linked to their public catalogue entries (National Library of Australia), and published recollections to their source. Living people are quoted only in their published words.</p>
-   <p><strong>Harmful language and violence.</strong> Racist historical material is linked to the archive or quoted as a short, attributed extract with a content note. Killings are named and counted, not described. Some linked reports, memoirs and diaries describe the fighting at Eureka and its dead: preview them before class.</p>
-   <p><strong>An apolitical approach.</strong> The routine asks what a source can prove, not what to think. Frame modern comparisons as a study of published language, not a verdict on a person.</p>
-   <p><strong>Year levels (for teachers only).</strong> Student pages carry no year level. The levels in the take-away section come from each app’s own Teacher Note. The same structure works across Years 4 to 10. <em>Frontier</em> is suited to Year 8/9; the app’s own note maps it to Australian Curriculum v9 Year 9 History (AC9HH9K03), so check the fit for your class.</p>
+   <p><strong>Year levels.</strong> The same structure works across Years 4 to 10. Year levels come from each app’s own Teacher Note: Deep Time and Batavia, Year 4; Eureka, Year 5; Federation, Year 6; Freedom Ride, Year 10. <em>Frontier</em> is suited to Year 8/9; the app’s own note maps it to Australian Curriculum v9 Year 9 History (AC9HH9K03), so check the fit for your class. Participant pages carry no year level.</p>
+   <p><strong>What is true on these pages.</strong> Every date, place and quotation comes from the cited records, as already checked for the live Reopen the Record apps, or from the linked public source. Nothing is invented. Several apps open with a page labelled <em>Imagined</em> (for Eureka, Nell’s Diary). Those openers are not reproduced on the workshop pages. Tell students which parts of an app are imagined, and ask how they could check.</p>
+   <p><strong>Cultural safety.</strong> Follow the <a href="https://aiatsis.gov.au/research/ethical-research/code-ethics" target="_blank" rel="noopener">AIATSIS Code of Ethics</a> and the protocols of the local communities whose Countries and histories each case concerns. Eureka took place on Wadawurrung Country. There is no secret or sacred material, ceremony, retold cultural story, rock art image or photograph of a deceased Aboriginal or Torres Strait Islander person on these pages; silhouettes are used.</p>
+   <p><strong>Violence and harmful language.</strong> Men died at Eureka, and at least one woman’s death is recorded. Some linked reports, memoirs and diaries describe wounds and deaths in detail, including the Charles Evans diary: preview them before class. Racist historical material in the other cases is linked or quoted as a short, attributed extract with a content note.</p>
+   <p><strong>An apolitical approach.</strong> The routine asks what a source can prove, not what to think. Frame modern comparisons in the Bias Button as a study of published language, not a verdict on a person.</p>
    <p><strong>Corrections.</strong> If something here should be corrected, it will be updated. The note asking for corrections is permanent.</p>
   </div>
  </details>
 </section>
 </main>
-
 <footer class="foot">
  <div class="wrap">
-  <p><strong>Reopen the Record: Australian Histories</strong> · Eureka, a guided investigation</p>
-  <p>Real, cited sources only. No invented quotes, outcomes or faces. Portraits are public-domain images of named public figures; other people are shown as labelled silhouettes. The opening illustration is a drawn scene of an archive desk, made for this page; it is not a historical image.</p>
-  <p>Eureka sources are held by, among others: Public Record Office Victoria, State Library Victoria, the National Library of Australia (Trove) and Wikisource. The other case files cite the National Archives of Australia, the Federal Register of Legislation, AIATSIS, the National Museum of Australia, the Western Australian Museum, the State Library of Western Australia, the Nationaal Archief, AustLII, the Internet Archive, UNESCO, the Australian War Memorial, ABC News and the Friends of Myall Creek Memorial.</p>
-  <p>Search engines are asked not to index this page. If something here should be corrected, please tell the workshop presenter, so the file can be updated.</p>
+  <p><strong>Reopen the Record: Australian Histories</strong> · Eureka presenter notes</p>
+  <p>Real, cited sources only. No invented quotes, outcomes or faces. Search engines are asked not to index this page.</p>
  </div>
 </footer>
-
 <div class="lightbox" id="lightbox" hidden><button type="button" class="lb-close" aria-label="Close">×</button><img alt=""><p class="lb-cap"></p></div>
 <script src="assets/app.js?v={V}"></script>
+<script>document.getElementById('print-presenter').addEventListener('click',function(){{window.print();}});</script>
 </body>
 </html>
-'''
+"""
+    return html_.replace('"assets/', '"../assets/')
 
+os.makedirs(os.path.join(ROOT, 'presenter'), exist_ok=True)
+open(os.path.join(ROOT, 'presenter', 'index.html'), 'w').write(presenter_page())
+print('wrote presenter/index.html')
 open(os.path.join(ROOT, 'index.html'), 'w').write(page())
 print('wrote index.html')

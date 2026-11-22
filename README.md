@@ -1,9 +1,8 @@
-# Reopen the Record · Eureka: a guided investigation
+# Reopen the Record · Eureka: who fired first?
 
-A one-case workshop page: the whole room reopens the Eureka file together (envelope, evidence cards, three witnesses, Bias Button, finding), in 45 to 60 minutes. All six Reopen the Record case files are offered as take-aways, with suggested year levels, QR codes, app links and printable case files.
+Two pages, both asking search engines not to index them (`noindex` and `robots.txt`):
 
-- `index.html` is generated: `python3 tools/build.py`
-- Content is shared with the six-case workshop page (`tools/content.py`, helpers in `tools/parts.py`).
-- `assets/pdf/` holds the printable case files. The Eureka file is exported from this page; the other five come from the full workshop page.
-- Answers typed on the page stay in the visitor's browser (localStorage). Nothing is sent anywhere.
-- Search engines are asked not to index the site (`noindex` and `robots.txt`).
+- `index.html`: the participant page. The investigation only: Eureka opener, briefing, Read/Ask/Decide, the envelope, evidence cards, three witnesses, Bias Button, Decide, Super Sleuths, the app QR, and the six case apps under Explore more. Its take-away is `assets/pdf/take-away-case-file-eureka.pdf`.
+- `presenter/index.html`: the presenter page (not linked from the participant page). Run sheet with suggested timings, why one case, prompts and answer guidance per step, the optional condensed option, the six take-aways with year levels, curriculum codes, QR codes and PDFs, the classroom routine and the Teacher Note. Its PDF is `assets/pdf/presenter-notes-eureka.pdf`.
+
+Build both with `python3 tools/build.py`. Content is shared with the six-case workshop page (`tools/content.py`, helpers in `tools/parts.py`). Answers typed on the participant page stay in the visitor's browser.

@@ -87,7 +87,7 @@
  .kit-row{grid-template-columns:22mm 1fr;gap:2mm}
  .kit-links .btn{display:none!important}
  .kit-links .url{font-size:7.5pt;color:#000}
- .kit-links::after{content:'Case file PDF on the workshop page';display:block;font:7.5pt system-ui,sans-serif;color:#555;margin-top:1mm}
+ .presenter-page .kit-links::after{content:'Case file PDF on the presenter page';display:block;font:7.5pt system-ui,sans-serif;color:#555;margin-top:1mm}
  .all-card .btn{display:none!important}
  .presenter{background:#fff;border:1px solid #999}
 }
@@ -96,3 +96,34 @@
 @media (max-width:700px){.hero-eureka .env-eyebrow{padding-right:60px!important}}
 .kit-zoom{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in}
 @media print{.kit-zoom{display:none}}
+
+/* presenter page */
+.p-head{padding-top:30px}
+.p-head h1{margin:.1em 0 .1em;font-size:clamp(2rem,5vw,3rem)}
+.p-head .folder-grid{grid-template-columns:1fr 200px}
+.p-qr{margin:0;background:#fff;border-radius:10px;padding:10px;box-shadow:0 6px 16px #0003}
+.p-qr img{width:100%;display:block}
+.p-qr figcaption{font-size:.75rem;line-height:1.3;text-align:center;color:#5c5148;margin-top:4px}
+.g-list{display:grid;gap:14px;margin-top:14px}
+.g-step{background:#fffdf7;border:2px solid #d9c39a;border-left:8px solid #2c4a7a;border-radius:12px;padding:16px 18px}
+.g-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.g-head h3{margin:0;color:#2c4a7a}
+.g-time{margin-left:auto;font:700 .82rem system-ui,sans-serif;color:#87313e}
+.g-cols{display:grid;grid-template-columns:1fr 1.4fr;gap:18px;margin-top:8px}
+.g-cols h4{margin:.2em 0 .3em;font:700 .78rem system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#6b4a22}
+.g-cols ul{margin:0;padding-left:1.2em}
+.g-cols li{margin:.25em 0}
+.g-ans{background:#f4f0e6;border-radius:8px;padding:8px 12px}
+@media (max-width:700px){.g-cols,.p-head .folder-grid{grid-template-columns:1fr}.g-time{margin-left:0;width:100%}.p-qr{max-width:200px}}
+@media print{
+ .presenter-page .why,.presenter-page .session{display:block!important}
+ .presenter-page .p-head .folder{padding:8mm 8mm 5mm}
+ .p-qr{box-shadow:none;width:38mm}
+ .g-step{break-inside:avoid;border:1px solid #999;border-left:3mm solid #2c4a7a;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .g-ans{background:#f4f0e6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .why-card{break-inside:avoid;border:1px solid #999}
+ .run{font-size:9.5pt}.run thead th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .presenter-page .guide{break-before:page}
+ .presenter-page .session{break-before:page}
+ .presenter-page .why h2{break-after:avoid}
+}
