@@ -176,3 +176,8 @@ sup.ref + sup.ref::before{content:",";color:#2c4a7a}
 .explore-panel[open] .dp-chev{transform:rotate(180deg)}
 .explore-panel[open] > summary{margin-bottom:18px}
 @media print{.explore-panel > summary{display:none}.explore-panel > .kits,.explore-panel > .kits-lead{display:grid}.explore-panel > .kits-lead{display:block}}
+
+/* participant hero: text and buttons only, so the briefing and decision point come before any picture */
+.hero-eureka .env-grid{grid-template-columns:1fr}
+.hero-eureka .stamp{right:24px}
+@media (max-width:700px){.hero-eureka .hero-qr{display:none}.hero-eureka{min-height:auto}}
