@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123m4'
+V = '20261123m5'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -523,6 +523,7 @@ def presenter_page():
      <button type="button" class="btn btn-primary" id="print-presenter">Download / print presenter notes</button>
      <a class="btn" href="assets/pdf/presenter-notes-eureka.pdf" download>Presenter notes (PDF) ↓</a>
      <a class="btn btn-quiet" href="../" target="_blank" rel="noopener">Open the participant page ↗</a>
+     <a class="btn btn-quiet" href="../screen/" target="_blank" rel="noopener">Open the big-screen view ↗</a>
     </div>
    </div>
    <figure class="qr p-qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/qr/workshop-eureka-qr.png" alt="QR code that opens the participant page"></button><figcaption>Show this code to the room: it opens the participant page.</figcaption></figure>
