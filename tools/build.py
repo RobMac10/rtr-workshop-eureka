@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123m2'
+V = '20261123m3'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -63,6 +63,15 @@ RUN = [
  ('Decide: our finding', 8, 7, 'Each person chooses a finding, names the one piece of evidence behind it, and says how sure they are. “We can’t know” is allowed.'),
  ('Close the file', 5, 4, 'Return to the list from the start. What changed? Show the take-aways: the printed Eureka file, the Bias Button, and all six cases.'),
 ]
+
+COVER_IMG = 'img/cover-australian-histories.jpg'
+def explore_cover():
+    """Series cover at the top of the Explore panel; appears only once the edited image is in assets/img."""
+    import os
+    if not os.path.exists(os.path.join(os.path.dirname(__file__), '..', 'assets', COVER_IMG)):
+        return ''
+    return ('<figure class="zoom explore-cover"><button type="button" class="zoom-btn" aria-label="Enlarge picture">'
+            '<img src="assets/%s?v=%s" alt="Reopen the Record: Australian Histories cover" loading="eager"></button></figure>') % (COVER_IMG, V)
 
 def eureka_casefile_card():
     c = EUP
@@ -392,6 +401,7 @@ def page():
     <span class="dp-title">Explore all six cases</span>
     <span class="dp-sub">Deep Time, Batavia, Eureka, Federation, Freedom Ride and Frontier. Tap to open the case cards, with QR codes and links <span class="dp-chev" aria-hidden="true">▾</span></span>
    </summary>
+   {explore_cover()}
    <p class="kits-lead">Every case is built the same way: an envelope, evidence cards, three witnesses, the Bias Button and a finding. Scan a code or tap a link to open the full case.</p>
    <div class="kits">{explores}</div>
   </details>

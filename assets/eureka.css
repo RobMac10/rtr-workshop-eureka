@@ -208,3 +208,8 @@ sup.ref + sup.ref::before{content:",";color:#2c4a7a}
 @media (max-width:760px){.dp-casefile .folder-grid{grid-template-columns:1fr}}
 @media print{.print-only-head{display:block}}
 @media (min-width:761px){.dp-casefile .folder .stamp{right:auto;left:auto;top:auto;bottom:18px;right:262px}}
+
+/* series cover at the top of the Explore panel */
+.explore-cover{margin:18px auto 6px;max-width:420px;background:#fffaf0;padding:8px;border-radius:6px;box-shadow:0 6px 14px #0003}
+.explore-cover img{width:100%;height:auto;max-height:80vh;object-fit:contain;display:block}
+@media print{.explore-cover{max-width:70mm;box-shadow:none;break-inside:avoid}.explore-cover img{max-height:100mm}}
