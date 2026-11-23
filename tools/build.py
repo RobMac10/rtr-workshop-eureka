@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123d1'
+V = '20261123e7'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -167,7 +167,7 @@ def kit(cid, yr, curric, pdf):
 def explore(cid):
     c = C[cid]; t, u, q = c['app']; src, cap = c['tile_img']
     return f'''<article class="kit" style="--case:{c['colour']}">
- <div class="kit-top"><button type="button" class="zoom-btn kit-zoom" aria-label="Enlarge picture"><img class="kit-pic" src="assets/{src}" alt="{e(cap)}" loading="lazy"></button></div>
+ <div class="kit-top"><button type="button" class="zoom-btn kit-zoom" aria-label="Enlarge picture"><img class="kit-pic" src="assets/{src}" alt="{e(cap)}"></button></div>
  <div class="kit-body">
   <p class="kit-dates">{e(c['dates'])}</p><h3>{e(c['title'])}</h3><p class="kit-q">{e(c['question'])}</p>
   <div class="kit-row"><figure class="kit-qr"><button type="button" class="zoom-btn" aria-label="Enlarge QR code"><img src="assets/{q}" alt="QR code that opens {e(t)}"></button></figure>
@@ -212,7 +212,7 @@ def page():
 <header class="topbar">
  <div class="topbar-in">
   <a class="brand" href="#top">Reopen the Record<small>Eureka · a guided investigation</small></a>
-  <nav aria-label="Sections"><a href="#how">How it works</a><a href="#case-eureka">Eureka file</a><a href="#bias">Bias Button</a><a href="#explore">Explore more</a></nav>
+  <nav aria-label="Sections"><a href="#investigate">Investigate</a><a href="#case-eureka">Eureka file</a><a href="#bias">Bias Button</a><a href="#bibliography">Bibliography</a><a href="#explore">Explore more</a></nav>
  </div>
 </header>
 <p class="banner">This workshop includes histories of First Nations peoples and of colonial violence. Aboriginal and Torres Strait Islander participants are advised that it names people who have died. It shows no photographs of them: silhouettes are used. It retells no cultural stories and shows no rock art. Some linked sources use the racist language of their time; they carry a content note. If something here should be corrected, please let us know, so the file can be updated.</p>
@@ -229,7 +229,7 @@ def page():
      <h1 id="h-title">Eureka</h1>
      <p class="env-sub">{e(EU['question'])}</p>
      <p class="tagline">Real people. Real records. Real questions the record never settled.</p>
-     <div class="hero-actions"><a class="btn btn-primary" href="#case-eureka">Open the Eureka file</a><a class="btn" href="#how">How it works</a><a class="btn btn-quiet" href="#explore">Explore more</a></div>
+     <div class="hero-actions"><a class="btn btn-primary" href="#investigate">Investigate Eureka</a><a class="btn" href="#case-eureka">Open the Eureka file</a></div>
     </div>
     <div class="env-pic">{pic(EU['tile_img'][0], EU['tile_img'][1])}</div>
    </div>
@@ -292,20 +292,6 @@ def page():
  </div>
 </section>
 
-<section class="session wrap" id="how" aria-labelledby="h-how">
- <p class="eyebrow">How the investigation works</p>
- <h2 id="h-how">Read. Ask. Decide.</h2>
- <div class="rad">
-  <article class="rad-card"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="6" width="40" height="52" rx="3" fill="#fbf3e6" stroke="#4a2e1b" stroke-width="3"/><path d="M20 18h24M20 26h24M20 34h24M20 42h14" stroke="#4a2e1b" stroke-width="3"/></svg>
-   <h3>Read</h3><p>Open the envelope and the evidence cards: an official report, a letter to the newspapers, an eyewitness book, the first Melbourne report and a diary.</p></article>
-  <article class="rad-card"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="27" cy="27" r="16" fill="#fbf3e6" stroke="#4a2e1b" stroke-width="4"/><path d="M39 39l16 16" stroke="#4a2e1b" stroke-width="6" stroke-linecap="round"/><circle cx="27" cy="23" r="5" fill="#4a2e1b"/><path d="M18 35c2-6 16-6 18 0" fill="#4a2e1b"/></svg>
-   <h3>Ask</h3><p>Three real witnesses, the same three questions: <em>What did they say they saw? Could they really have seen it? Why might they say it?</em> Then press the Bias Button.</p></article>
-  <article class="rad-card"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 8v46M18 54h28M12 18h40" stroke="#4a2e1b" stroke-width="3.5" stroke-linecap="round"/><path d="M12 18l-8 16h16zM52 18l-8 16h16z" fill="#fbf3e6" stroke="#4a2e1b" stroke-width="3" stroke-linejoin="round"/><circle cx="32" cy="8" r="3.5" fill="#a67c2e"/></svg>
-   <h3>Decide</h3><p>Write your finding and the one piece of evidence behind it. Say how sure you are. <strong>“We can’t know”</strong> is a fair finding when the record will not support more.</p></article>
- </div>
- <div class="cant-know"><span class="stamp stamp-flat">We can’t know</span><p>Sometimes the most honest finding. At Eureka, the people who were there still disagreed about the first shot. Saying what the record cannot tell us is part of the work.</p></div>
- <p class="note">Your typed answers stay in this browser, on this device only. Nothing is sent anywhere.</p>
-</section>
 
 <div class="wrap cases-wrap">
  {eureka_section()}
@@ -352,18 +338,36 @@ def page():
  </ul>
 </section>
 
+<section class="mine-sec wrap" id="take-away" aria-label="Your Eureka case file">
+  <div class="mine">
+   <h3>Your Eureka case file</h3>
+   <p>Press the button, then choose <em>Save as PDF</em> in the print window to keep it. It prints with a cover, the evidence, your answers, the Bias Button, the bibliography and the links to all six cases.</p>
+   <p><button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my Eureka case file</button> <a class="btn" href="assets/pdf/take-away-case-file-eureka.pdf" download>Blank Eureka case file (PDF) ↓</a></p>
+   <p class="note"><button type="button" class="linkish" id="clear-all">Clear all my answers on this device</button></p>
+  </div>
+</section>
+
 <section class="kits-sec" id="explore" aria-labelledby="h-explore">
  <div class="wrap">
   <p class="eyebrow">Explore more</p>
   <h2 id="h-explore">Six case files. Reopen another.</h2>
-  <p class="kits-lead">Every case is built the same way: an envelope, evidence cards, three witnesses, the Bias Button and a finding. Scan a code or tap a link to open the full case.</p>
-  <div class="kits">{explores}</div>
-  <div class="mine">
-   <h3>Your Eureka case file</h3>
-   <p>Press the button, then choose <em>Save as PDF</em> in the print window to keep it. It prints with a cover, the evidence, your answers, the Bias Button and the links to all six cases.</p>
-   <p><button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my Eureka case file</button> <a class="btn" href="assets/pdf/take-away-case-file-eureka.pdf" download>Blank Eureka case file (PDF) ↓</a></p>
-   <p class="note"><button type="button" class="linkish" id="clear-all">Clear all my answers on this device</button></p>
-  </div>
+  <details class="explore-panel">
+   <summary class="dp-card dp-explore">
+    <span class="dp-tab">Explore more</span>
+    <svg class="dp-ico" viewBox="0 0 64 64" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"><path d="M4 10h10l3 3h11v13H4z"/><path d="M36 10h10l3 3h11v13H36z"/><path d="M4 36h10l3 3h11v13H4z"/><path d="M36 36h10l3 3h11v13H36z"/></g><circle cx="48" cy="46" r="9" fill="none" stroke="#e0be82" stroke-width="4"/><path d="M54 52l7 7" stroke="#e0be82" stroke-width="5" stroke-linecap="round"/></svg>
+    <span class="dp-title">Explore all six cases</span>
+    <span class="dp-sub">Deep Time, Batavia, Eureka, Federation, Freedom Ride and Frontier. Tap to open the case cards, with QR codes and links <span class="dp-chev" aria-hidden="true">▾</span></span>
+   </summary>
+   <p class="kits-lead">Every case is built the same way: an envelope, evidence cards, three witnesses, the Bias Button and a finding. Scan a code or tap a link to open the full case.</p>
+   <div class="kits">{explores}</div>
+  </details>
+ </div>
+</section>
+
+<section class="closing-sec wrap" aria-label="Closing">
+ <div class="memo closing-memo">
+  <p class="closing">Real people. Real records. Real questions the record never settled.</p>
+  <p class="closing closing-2">What a terrible thing to lose.</p>
  </div>
 </section>
 

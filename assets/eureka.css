@@ -160,3 +160,19 @@ sup.ref + sup.ref::before{content:",";color:#2c4a7a}
 .dp-sub{font-size:.95rem;line-height:1.4;opacity:.95}
 @media (max-width:760px){.dp-grid{grid-template-columns:1fr;padding:20px 16px}.dp-art{max-width:150px;margin:0 auto}.dp-choices{grid-template-columns:1fr;gap:22px}.dp-card{min-height:0}}
 @media print{.decide-point{display:none!important}}
+
+.mine-sec{padding-top:10px}
+@media print{.mine-sec{display:none!important}}
+.closing-sec{padding:34px 24px 50px}
+.closing-memo{text-align:center;padding:26px 30px}
+@media print{.closing-sec{break-inside:avoid}.closing-memo{box-shadow:none}}
+
+/* Explore all six cases: big card that opens a panel */
+.explore-panel{margin-top:14px}
+.explore-panel > summary{list-style:none;cursor:pointer;max-width:620px;margin-top:16px}
+.explore-panel > summary::-webkit-details-marker{display:none}
+.dp-explore{background:linear-gradient(160deg,#2f7480,#235e69)}
+.dp-chev{display:inline-block;margin-left:4px;transition:transform .2s}
+.explore-panel[open] .dp-chev{transform:rotate(180deg)}
+.explore-panel[open] > summary{margin-bottom:18px}
+@media print{.explore-panel > summary{display:none}.explore-panel > .kits,.explore-panel > .kits-lead{display:grid}.explore-panel > .kits-lead{display:block}}
