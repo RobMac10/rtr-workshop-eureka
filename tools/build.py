@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123k1'
+V = '20261123m1'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -87,7 +87,6 @@ def eureka_section():
      <p class="key-q">{e(c['question'])}</p>
      <div class="case-actions">
       <button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my case file</button>
-      <a class="btn" href="{e(app_u)}" target="_blank" rel="noopener">Open the full app ↗</a>
      </div>
     </div>
     <div class="folder-pic">{pic(c['tile_img'][0], c['tile_img'][1])}</div>
