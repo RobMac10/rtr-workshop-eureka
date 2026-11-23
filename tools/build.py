@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123m3'
+V = '20261123m4'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -428,6 +428,7 @@ def page():
 
 <div class="lightbox" id="lightbox" hidden><button type="button" class="lb-close" aria-label="Close">×</button><img alt=""><p class="lb-cap"></p></div>
 <script src="assets/app.js?v={V}"></script>
+<script>(function(){{function openExplore(){{var d=document.querySelector('#explore .explore-panel');if(d)d.open=true;}}document.querySelectorAll('a[href="#explore"]').forEach(function(a){{a.addEventListener('click',openExplore);}});if(location.hash==='#explore')openExplore();window.addEventListener('hashchange',function(){{if(location.hash==='#explore')openExplore();}});}})();</script>
 </body>
 </html>
 '''
