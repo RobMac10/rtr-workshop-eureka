@@ -141,3 +141,22 @@ sup.ref + sup.ref::before{content:",";color:#2c4a7a}
 .bib-sup{display:block;font-size:.86rem;color:#5c5148}
 .bib-list a{color:#7c2938}
 @media print{.bib{break-before:page;padding:0}.bib-list li{break-inside:avoid;font-size:9.5pt}.bib-list a::after{content:" " attr(href);font-size:7.5pt;color:#333;word-break:break-all}.est-head .bib-link{display:none}}
+
+/* decision point: Investigate Eureka */
+.decide-point{padding-top:46px}
+.dp-grid{display:grid;grid-template-columns:230px 1fr;gap:28px;align-items:center;background:linear-gradient(160deg,#f6e8cc,#efd9ae);border:2px solid #c9a96a;border-radius:16px;padding:24px 28px;box-shadow:0 10px 26px #5a3a1a22}
+.dp-art svg{width:100%;height:auto;display:block}
+.dp-body h2{margin:.1em 0 .2em}
+.dp-lead{margin:0 0 16px}
+.dp-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dp-card{position:relative;display:flex;flex-direction:column;gap:6px;min-height:170px;padding:34px 20px 18px;border-radius:6px 14px 14px 14px;text-decoration:none;color:#fff;box-shadow:0 8px 18px #0003;transition:transform .15s,box-shadow .15s}
+.dp-card:hover,.dp-card:focus-visible{transform:translateY(-3px);box-shadow:0 12px 24px #0004}
+.dp-card:focus-visible{outline:4px solid #e0be82;outline-offset:3px}
+.dp-app{background:linear-gradient(160deg,#35588f,#2c4a7a)}
+.dp-env{background:linear-gradient(160deg,#9a3a48,#7c2938)}
+.dp-tab{position:absolute;top:-14px;left:16px;font:700 .75rem system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;padding:6px 12px;border-radius:8px 8px 0 0;background:#e0be82;color:#4a2e1b}
+.dp-ico{width:52px;height:52px;color:#fff}
+.dp-title{font:700 1.5rem/1.15 "EB Garamond",Georgia,serif}
+.dp-sub{font-size:.95rem;line-height:1.4;opacity:.95}
+@media (max-width:760px){.dp-grid{grid-template-columns:1fr;padding:20px 16px}.dp-art{max-width:150px;margin:0 auto}.dp-choices{grid-template-columns:1fr;gap:22px}.dp-card{min-height:0}}
+@media print{.decide-point{display:none!important}}

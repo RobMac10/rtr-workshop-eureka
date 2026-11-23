@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123b1'
+V = '20261123d1'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -97,7 +97,7 @@ def eureka_section():
   <p class="country">{e(c['country'])}</p>
  </div>
 
- <div class="step"><span class="step-n">1</span><h3>Open the envelope</h3></div>
+ <div class="step" id="envelope"><span class="step-n">1</span><h3>Open the envelope</h3></div>
  <div class="opener">{''.join('<p>%s</p>' % e(p) for p in c['opener'])}<p class="opener-src">Every date, place and quotation here is from the records cited below.</p></div>
  <p class="lead-in small-gap est-head"><strong>What reliable sources have established.</strong> <a class="bib-link" href="#bibliography">See the bibliography ↓</a></p>
  <ul class="agreed">{''.join('<li>%s %s</li>' % (e(t), ''.join('<sup class="ref"><a href="#bib-%s" aria-label="Source %d">%d</a></sup>' % (BIB[n-1][0], n, n) for n in refs)) for t, refs in ESTABLISHED)}</ul>
@@ -247,6 +247,48 @@ def page():
   <p>You will leave with your Eureka case file, the Bias Button, and links to all six case files: Deep Time, Batavia, Eureka, Federation, Freedom Ride and Frontier.</p>
   <p class="closing">Real people. Real records. Real questions the record never settled.</p>
   <p class="closing closing-2">What a terrible thing to lose.</p>
+ </div>
+</section>
+
+<section class="decide-point wrap" id="investigate" aria-labelledby="h-inv">
+ <div class="dp-grid">
+  <div class="dp-art" aria-hidden="true">
+   <svg viewBox="0 0 240 260" role="img" focusable="false">
+    <ellipse cx="120" cy="246" rx="78" ry="9" fill="#4a2e1b" opacity=".18"/>
+    <!-- detective silhouette: deerstalker cap, cape coat -->
+    <path d="M70 244c-2-46 8-86 30-104h40c22 18 32 58 30 104z" fill="#3a2a1f"/>
+    <path d="M62 170c14-22 34-32 58-32s44 10 58 32l-10 30c-12-16-28-24-48-24s-36 8-48 24z" fill="#4a3426"/>
+    <rect x="108" y="122" width="24" height="22" rx="6" fill="#3a2a1f"/>
+    <circle cx="120" cy="100" r="30" fill="#3a2a1f"/>
+    <path d="M86 92c2-26 16-40 34-40s32 14 34 40c-10-6-22-8-34-8s-24 2-34 8z" fill="#5a4030"/>
+    <path d="M84 92c-14 2-22 8-24 14 12-2 24-4 34-6zM156 92c14 2 22 8 24 14-12-2-24-4-34-6z" fill="#5a4030"/>
+    <path d="M104 58c4-8 10-12 16-12s12 4 16 12" stroke="#6b4c38" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <!-- arm and big magnifying glass -->
+    <path d="M150 176c16 4 30-4 40-20" stroke="#3a2a1f" stroke-width="16" fill="none" stroke-linecap="round"/>
+    <line x1="196" y1="148" x2="182" y2="170" stroke="#7a4a1e" stroke-width="12" stroke-linecap="round"/>
+    <circle cx="206" cy="122" r="30" fill="#e8f0f6" fill-opacity=".85" stroke="#a67c2e" stroke-width="9"/>
+    <path d="M192 110a18 18 0 0 1 16-8" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/>
+   </svg>
+  </div>
+  <div class="dp-body">
+   <p class="eyebrow">Decision point</p>
+   <h2 id="h-inv">Investigate Eureka</h2>
+   <p class="dp-lead">Two ways in. Choose one: the full case app, or the case file on this page.</p>
+   <div class="dp-choices">
+    <a class="dp-card dp-app" href="https://robmac10.github.io/who-fired-first/" target="_blank" rel="noopener">
+     <span class="dp-tab">Choice A</span>
+     <svg class="dp-ico" viewBox="0 0 64 64" aria-hidden="true"><rect x="16" y="4" width="32" height="56" rx="6" fill="none" stroke="currentColor" stroke-width="4"/><rect x="21" y="12" width="22" height="36" rx="2" fill="currentColor" opacity=".25"/><circle cx="32" cy="54" r="2.6" fill="currentColor"/><path d="M26 22h12M26 29h12M26 36h8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+     <span class="dp-title">Open the App</span>
+     <span class="dp-sub">Who Fired First? The whole case on your phone or tablet. Opens in a new tab ↗</span>
+    </a>
+    <a class="dp-card dp-env" href="#envelope">
+     <span class="dp-tab">Choice B</span>
+     <svg class="dp-ico" viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="14" width="54" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="4"/><path d="M5 17l27 20 27-20" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="32" cy="37" r="6" fill="#e0be82"/></svg>
+     <span class="dp-title">Open the Envelope</span>
+     <span class="dp-sub">Work through the case file here: evidence cards, three witnesses, the Bias Button and your finding ↓</span>
+    </a>
+   </div>
+  </div>
  </div>
 </section>
 
