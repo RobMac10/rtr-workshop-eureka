@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123m1'
+V = '20261123m2'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -64,6 +64,29 @@ RUN = [
  ('Close the file', 5, 4, 'Return to the list from the start. What changed? Show the take-aways: the printed Eureka file, the Bias Button, and all six cases.'),
 ]
 
+def eureka_casefile_card():
+    c = EUP
+    return f''' <div class="case-head dp-casefile" style="--case:{c['colour']}">
+  <div class="folder">
+   <span class="folder-tab">Case file</span><span class="string" aria-hidden="true"></span>
+   <div class="folder-grid">
+    <div>
+     <p class="env-eyebrow">Reopen the Record · Ballarat · {e(c['dates'])}</p>
+     <h2 id="h-casefile">{e(c['title'])}</h2>
+     <p class="key-q">{e(c['question'])}</p>
+     <div class="case-actions">
+      <button type="button" class="btn btn-primary print-case" data-case="eureka">Download / print my case file</button>
+     </div>
+    </div>
+    <div class="folder-pic">{pic(c['tile_img'][0], c['tile_img'][1])}</div>
+   </div>
+   <span class="stamp" aria-hidden="true">Case reopened</span>
+  </div>
+  <p class="country">{e(c['country'])}</p>
+ </div>
+
+'''
+
 def eureka_section():
     c = EUP; cid = 'eureka'
     inq = c['inquiry']
@@ -76,8 +99,8 @@ def eureka_section():
     bq = ['Who made it, and why?','Who is missing?','What are the loaded words doing?','What does it want you to think or do?']
     app_t, app_u, app_qr = c['app']
     return f'''
-<section class="case open print-me" id="case-eureka" data-case="eureka" style="--case:{c['colour']}" aria-labelledby="h-eureka">
- <div class="case-head">
+<section class="case open print-me" id="case-eureka" data-case="eureka" style="--case:{c['colour']}" aria-label="Eureka case file">
+ <div class="case-head print-only-head">
   <div class="folder">
    <span class="folder-tab">Case file</span><span class="string" aria-hidden="true"></span>
    <div class="folder-grid">
@@ -97,19 +120,32 @@ def eureka_section():
  </div>
 
  <div class="step" id="envelope"><span class="step-n">1</span><h3>Open the envelope</h3></div>
- <div class="opener">{''.join('<p>%s</p>' % e(p) for p in c['opener'])}<p class="opener-src">Every date, place and quotation here is from the records cited below.</p></div>
- <p class="lead-in small-gap est-head"><strong>What reliable sources have established.</strong> <a class="bib-link" href="#bibliography">See the bibliography ↓</a></p>
+ <div class="env-inv" aria-labelledby="h-inv-list">
+  <p class="inv-head" id="h-inv-list"><span class="inv-tag">Envelope contents</span> What is inside, in order</p>
+  <ol class="inv-list">
+   <li class="inv-nell"><span class="inv-n">1</span><div><strong>Nell’s Diary</strong> <span class="imag">Imagined</span><br><span class="inv-note">The case-opening story. Written for this case, based on real events, not a real document.</span>
+    <span class="inv-links"><a class="btn btn-primary" href="https://robmac10.github.io/nells-diary/" target="_blank" rel="noopener">Read Nell’s Diary ↗</a><a class="btn" href="assets/pdf/nells-diary.pdf?v={V}" target="_blank" rel="noopener">Print Nell’s Diary (PDF)</a></span></div></li>
+   <li><span class="inv-n">2</span><div><a href="#opener">The opener</a><span class="inv-note"> · 3 December 1854, before dawn</span></div></li>
+   <li><span class="inv-n">3</span><div><a href="#established">What reliable sources have established</a><span class="inv-note"> · with a bibliography</span></div></li>
+   <li><span class="inv-n">4</span><div><a href="#evidence">Evidence cards A–E</a><span class="inv-note"> · a report, a letter, a book, a newspaper and a diary</span></div></li>
+   <li><span class="inv-n">5</span><div><a href="#witnesses">Three witnesses</a><span class="inv-note"> · Lalor, Thomas and Carboni</span></div></li>
+   <li><span class="inv-n">6</span><div><a href="#bias-step">The Bias Button</a><span class="inv-note"> · four questions for any source</span></div></li>
+   <li><span class="inv-n">7</span><div><a href="#finding">Your finding</a><span class="inv-note"> · who fired first, or “We can’t know”</span></div></li>
+  </ol>
+ </div>
+ <div class="opener" id="opener">{''.join('<p>%s</p>' % e(p) for p in c['opener'])}<p class="opener-src">Every date, place and quotation here is from the records cited below.</p></div>
+ <p class="lead-in small-gap est-head" id="established"><strong>What reliable sources have established.</strong> <a class="bib-link" href="#bibliography">See the bibliography ↓</a></p>
  <ul class="agreed">{''.join('<li>%s %s</li>' % (e(t), ''.join('<sup class="ref"><a href="#bib-%s" aria-label="Source %d">%d</a></sup>' % (BIB[n-1][0], n, n) for n in refs)) for t, refs in ESTABLISHED)}</ul>
 
- <div class="step"><span class="step-n">2</span><h3>Evidence cards</h3></div>
+ <div class="step" id="evidence"><span class="step-n">2</span><h3>Evidence cards</h3></div>
  <p class="lead-in">Five real documents, each with its citation and a link to the archive. Read your card. Who made it, when, and for whom?</p>
  <div class="ev-grid">{''.join(evidence_card(c,i,ev) for i,ev in enumerate(c['evidence']))}</div>
 
- <div class="step"><span class="step-n">3</span><h3>Three witnesses, three questions</h3></div>
+ <div class="step" id="witnesses"><span class="step-n">3</span><h3>Three witnesses, three questions</h3></div>
  <p class="lead-in">Ask every witness the same three questions. Tap a picture to enlarge it.</p>
  <div class="witnesses">{''.join(witness_card(c,i,w) for i,w in enumerate(c['witnesses']))}</div>
 
- <div class="step"><span class="step-n">4</span><h3>Bias Button</h3></div>
+ <div class="step" id="bias-step"><span class="step-n">4</span><h3>Bias Button</h3></div>
  <div class="bb-step">
   <div class="bb-intro">
    <span class="bb-big" aria-hidden="true">Bias<br>Button</span>
@@ -120,7 +156,7 @@ def eureka_section():
   <div class="bb-qs">{''.join(ta('eureka-bb%d' % i, q, 2) for i, q in enumerate(bq))}</div>
  </div>
 
- <div class="step"><span class="step-n">5</span><h3>Decide: my finding</h3></div>
+ <div class="step" id="finding"><span class="step-n">5</span><h3>Decide: my finding</h3></div>
  <details class="inq-wrap"><summary>Before you decide: inquiry questions on people, documents, silences, and what is still unsettled</summary>
   <div class="inq-grid">{inq_html}</div>
  </details>
@@ -278,6 +314,7 @@ def page():
      <span class="dp-title">Open the App</span>
      <span class="dp-sub">Who Fired First? The whole case on your phone or tablet. Opens in a new tab ↗</span>
     </a>
+    {eureka_casefile_card()}
     <a class="dp-card dp-env" href="#envelope">
      <span class="dp-tab">Choice B</span>
      <svg class="dp-ico" viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="14" width="54" height="38" rx="3" fill="none" stroke="currentColor" stroke-width="4"/><path d="M5 17l27 20 27-20" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="32" cy="37" r="6" fill="#e0be82"/></svg>

@@ -181,3 +181,30 @@ sup.ref + sup.ref::before{content:",";color:#2c4a7a}
 .hero-eureka .env-grid{grid-template-columns:1fr}
 .hero-eureka .stamp{right:24px}
 @media (max-width:700px){.hero-eureka .hero-qr{display:none}.hero-eureka{min-height:auto}}
+
+/* envelope contents (evidence-tag inventory) */
+.env-inv{max-width:900px;margin:6px 0 20px;background:#f6e8cc;border:2px solid #c9a96a;border-radius:6px 14px 14px 14px;padding:18px 20px 12px;position:relative;box-shadow:0 6px 16px #5a3a1a1c}
+.inv-head{margin:0 0 10px;font-weight:700;color:#4a2e1b}
+.inv-tag{display:inline-block;font:700 .75rem system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;background:#4a2e1b;color:#f6ead2;padding:5px 10px;border-radius:4px;margin-right:8px}
+.inv-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.inv-list li{display:flex;gap:12px;align-items:flex-start;background:#fffdf7;border:1px dashed #b98f4a;border-radius:8px;padding:9px 12px;position:relative}
+.inv-list li::before{content:"";position:absolute;left:-7px;top:50%;width:12px;height:12px;border-radius:50%;background:#e0be82;border:2px solid #9c7432;transform:translateY(-50%)}
+.inv-n{flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#2c4a7a;color:#fff;font:700 .85rem system-ui,sans-serif}
+.inv-list a:not(.btn){font-weight:700;color:#7c2938}
+.inv-note{color:#5c5148;font-size:.92rem}
+.inv-nell{background:#fffaf0!important;border-style:solid!important;border-color:#a3281f!important}
+.imag{display:inline-block;border:1px dashed #6b5a4a;border-radius:999px;padding:0 8px;font:700 .7rem system-ui,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#4a3426;background:#faf3e3;vertical-align:middle}
+.inv-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.inv-links .btn{margin:0;padding:9px 14px;font-size:.92rem}
+@media print{.env-inv{box-shadow:none;break-inside:avoid}.inv-links .btn{display:inline-block!important;border:0;padding:0 4mm 0 0;color:#000}.inv-links a::after{content:" " attr(href);font-size:7.5pt;font-weight:400}}
+.env-inv .inv-links .btn-primary{background:#87313e;border-color:#87313e;color:#fff}
+/* case file card sits between Choice A and Choice B */
+.dp-choices{grid-template-columns:1fr!important;gap:30px}
+.dp-casefile{margin:4px 0 0}
+.dp-casefile .folder h2{font-size:clamp(2rem,4.4vw,2.8rem)}
+.dp-casefile .folder-grid{grid-template-columns:1fr 220px}
+.dp-card{min-height:0}
+.print-only-head{display:none}
+@media (max-width:760px){.dp-casefile .folder-grid{grid-template-columns:1fr}}
+@media print{.print-only-head{display:block}}
+@media (min-width:761px){.dp-casefile .folder .stamp{right:auto;left:auto;top:auto;bottom:18px;right:262px}}
