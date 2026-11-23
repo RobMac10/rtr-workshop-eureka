@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123s2'
+V = '20261123b1'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -15,6 +15,32 @@ EUP = copy.deepcopy(EU)
 EUP['country'] = 'This file is about the Eureka Stockade at Ballarat, on Wadawurrung Country. Some linked accounts of the battle describe wounds and deaths in detail.'
 EUP['evidence'][4]['kind'] = 'Diary · 1853–1855'
 EUP['evidence'][4]['cite'] = 'State Library Victoria, “An eyewitness account of the Eureka Stockade”. Once wrongly said to be by Samuel Lazarus. It records a death.'
+ESTABLISHED = [
+ ('During 1854 police checked digger licences, and the diggers grew angry.', [1, 2]),
+ ('On 29 November a huge meeting on Bakery Hill burned licences and raised the blue Southern Cross flag.', [1]),
+ ('On 30 November Peter Lalor led the diggers in an oath under the flag.', [1]),
+ ('Thomas’s force of 276 men (100 mounted, 176 on foot) left the Government Camp early on 3 December; Thomas wrote, “At 3 o’clock I left”. Witnesses differ on the time of the attack: Carboni woke at “full dawn, not daylight”.', [3, 1]),
+ ('Thirteen men, including Raffaello Carboni, were tried for high treason in 1855. All were found not guilty.', [1, 4]),
+]
+# Bibliography: (anchor, citation html, supports)
+BIB = [
+ ('carboni', 'Carboni, Raffaello. <cite>The Eureka Stockade: The Consequence of Some Pirates Wanting on Quarter-Deck a Rebellion</cite>. Melbourne, 1855. Free full text: Project Gutenberg, eBook 3546.', 'https://www.gutenberg.org/ebooks/3546',
+  'Established: licence checks and anger; the Bakery Hill meeting of 29 November, licence burning and the Southern Cross flag (chs XXVI–XXXII; the flag described in ch. XXXVII); Lalor’s oath of 30 November (ch. XXXVII); “full dawn, not daylight” (ch. LVI); the thirteen tried for high treason and his own “Not Guilty” verdict (chs LXIX, LXXIII, XC). Also Evidence C and Witness 3.'),
+ ('lalor', 'Lalor, Peter. “To the Colonists of Victoria.” <cite>The Argus</cite> (Melbourne), 10 April 1855, p. 7. Also printed in the <cite>Geelong Advertiser</cite>, 9 April 1855. National Library of Australia, Trove, article 4806503.', 'https://trove.nla.gov.au/newspaper/article/4806503',
+  'Established: licence checks and the diggers’ anger. Also Evidence B and Witness 1.'),
+ ('thomas', 'Thomas, Captain J. W. Report to Head Quarters, Camp, Ballaarat, 3 December 1854. Government records held by Public Record Office Victoria. Transcription on Wikisource.', 'https://en.wikisource.org/wiki/Capt._J._W._Thomas_report_to_Headquarters_following_Eureka_rebellion',
+  'Established: the force of 276 men, “one hundred mounted men, and one hundred and seventy-six foot”, and “At 3 o’clock I left”. Also Evidence A and Witness 2.'),
+ ('prov', 'Public Record Office Victoria. “Eureka on trial: Ballarat goldfields rebellion.” Online exhibition of government records, last updated 18 May 2021.', 'https://prov.vic.gov.au/explore-collection/online-galleries-and-exhibitions/eureka-trial',
+  'Established: the treason trials of 1855 “failed to convict any of those charged”. Also holds the records behind Evidence A.'),
+ ('argus-1854', '“By Express. Fatal Collision at Ballaarat.” <cite>The Argus</cite> (Melbourne), 4 December 1854, p. 5. National Library of Australia, Trove, article 4801224.', 'https://trove.nla.gov.au/newspaper/article/4801224',
+  'Evidence D.'),
+ ('evans', 'Evans, Charles. Goldfields diary, 1853–1855. State Library Victoria, “An eyewitness account of the Eureka Stockade” (once wrongly attributed to Samuel Lazarus).', 'https://slv.vic.gov.au/stories/eyewitness-account-eureka-stockade',
+  'Evidence E.'),
+ ('hayes', '“Anastasia Hayes, A Eureka Heroine.” <cite>Australian Town and Country Journal</cite>, 18 June 1892. Summarised in Eurekapedia, “Anastasia Hayes”.', 'https://eurekapedia.org/Anastasia_Hayes',
+  'Inquiry questions (silences) and Super Sleuths.'),
+ ('flag', 'Art Gallery of Ballarat. “The Eureka Flag (The Flag of the Southern Cross).” Unknown maker, 1854, wool and cotton; gift of the King family, 2001. On display at the Eureka Centre Ballarat.', 'https://www.artgalleryofballarat.com.au/stories/the-eureka-flag-the-flag-of-the-southern-cross/',
+  'Super Sleuths: who sewed the flag. See also the <a href="https://eurekacentreballarat.com.au/about-eureka/" target="_blank" rel="noopener">Eureka Centre ↗</a>.'),
+]
 EUP['inquiry']['silences'][1] = 'Women of the goldfields, such as Anastasia Hayes, appear in later notices (1892), but no source in this case says she saw the first shot.'
 
 # Year levels are taken from each app's own Teacher Note (Australian Curriculum v9). Teacher-facing only.
@@ -30,7 +56,7 @@ KITS = [
 # Suggested timings (minutes): full 55, condensed 45
 RUN = [
  ('Open the envelope', 5, 4, 'Read the opener aloud together. Ask the room: what do we think we already know about Eureka? Write it up, to test later.'),
- ('Read what is agreed', 5, 3, 'The few things every record agrees on. Mark what is agreed and what is still disputed.'),
+ ('Read what reliable sources have established', 5, 3, 'The facts reliable sources have established, with their sources. Mark what is established and what is still disputed.'),
  ('Evidence cards', 12, 10, 'Pairs take one or two cards each (A–E): who made it, when, for whom, and what it says about the first shot. Report back in one sentence.'),
  ('Three witnesses', 12, 10, 'Lalor, Thomas and Carboni. The same three questions for each. Compare answers around the room.'),
  ('Bias Button', 8, 7, 'Everyone presses the button on one source and answers the four questions. Share one loaded word and one missing voice.'),
@@ -73,8 +99,8 @@ def eureka_section():
 
  <div class="step"><span class="step-n">1</span><h3>Open the envelope</h3></div>
  <div class="opener">{''.join('<p>%s</p>' % e(p) for p in c['opener'])}<p class="opener-src">Every date, place and quotation here is from the records cited below.</p></div>
- <p class="lead-in small-gap"><strong>What the record agrees on.</strong></p>
- <ul class="agreed">{''.join('<li>%s</li>' % e(a) for a in c['agreed'])}</ul>
+ <p class="lead-in small-gap est-head"><strong>What reliable sources have established.</strong> <a class="bib-link" href="#bibliography">See the bibliography ↓</a></p>
+ <ul class="agreed">{''.join('<li>%s %s</li>' % (e(t), ''.join('<sup class="ref"><a href="#bib-%s" aria-label="Source %d">%d</a></sup>' % (BIB[n-1][0], n, n) for n in refs)) for t, refs in ESTABLISHED)}</ul>
 
  <div class="step"><span class="step-n">2</span><h3>Evidence cards</h3></div>
  <p class="lead-in">Five real documents, each with its citation and a link to the archive. Read your card. Who made it, when, and for whom?</p>
@@ -154,6 +180,8 @@ def page():
     run_rows = ''.join(f'<tr><th scope="row"><span class="rs-n">{i+1}</span> {e(n)}</th><td class="t">{a} min</td><td class="t">{b} min</td><td>{e(d)}</td></tr>' for i,(n,a,b,d) in enumerate(RUN))
     tot_a = sum(r[1] for r in RUN); tot_b = sum(r[2] for r in RUN)
     explores = ''.join(explore(k[0]) for k in KITS)
+    bib_items = ''.join(f'<li id="bib-{a}">{cit} <a href="{u}" target="_blank" rel="noopener">{e(u.replace("https://","").split("/")[0])} ↗</a> <span class="bib-sup">Supports: {sup}</span></li>' for a, cit, u, sup in BIB)
+    bias_bib = ''.join(f'<li>Bias Button investigation {e(t)}: {e(src)} <a href="{u}" target="_blank" rel="noopener">{e(lt)} ↗</a></li>' for t, d, src, u, lt in BIAS_INV)
     return f'''<!doctype html>
 <html lang="en-AU">
 <head>
@@ -270,6 +298,18 @@ def page():
  </div>
 </section>
 
+<section class="bib wrap" id="bibliography" aria-labelledby="h-bib">
+ <p class="eyebrow">Bibliography</p>
+ <h2 id="h-bib">Sources for this case file</h2>
+ <p class="note">Numbers match the small numbers in “What reliable sources have established”. Each entry says what it supports. Picture credits are given with the pictures.</p>
+ <ol class="bib-list">{bib_items}</ol>
+ <h3 class="sub">The Bias Button</h3>
+ <ul class="bib-list bib-plain">
+  <li id="bib-awm">Australian War Memorial. “To the women of Australia…” recruiting poster, 1915, printed by the Victorian Government Printer. ARTV02512 (catalogue also at C98067). <a href="https://www.awm.gov.au/collection/C98067" target="_blank" rel="noopener">awm.gov.au ↗</a> <span class="bib-sup">Supports: the “Try it again” poster.</span></li>
+  {bias_bib}
+ </ul>
+</section>
+
 <section class="kits-sec" id="explore" aria-labelledby="h-explore">
  <div class="wrap">
   <p class="eyebrow">Explore more</p>
@@ -312,10 +352,10 @@ GUIDE = [
    'Words to check: licence, stockade, sentry, signal shot, volley.'],
   ['Every record agrees there was shooting before dawn on 3 December 1854. The dispute is who started it.',
    'Captain Thomas led 276 men (100 mounted, 176 on foot). Inside the stockade there were far fewer diggers.']),
- ('Read what is agreed',
-  ['Which of these facts would every witness accept? Which detail is still disputed?'],
-  ['The licence burning and the Southern Cross flag on Bakery Hill (29 November) and Lalor’s oath (30 November) are agreed.',
-   'The exact time the force left the Camp, and the time of the attack, are disputed: witnesses disagree.',
+ ('Read what reliable sources have established',
+  ['Which source supports each fact? (The numbers lead to the bibliography.) Which detail is still disputed?'],
+  ['The licence burning and the Southern Cross flag on Bakery Hill (29 November) and Lalor’s oath (30 November) are established from Carboni’s account (chs XXVI–XXXII, XXXVII); the participant page’s bibliography lists every source.',
+   'Thomas wrote “At 3 o’clock I left”; witnesses differ on the time of the attack (Carboni woke at “full dawn, not daylight”).',
    'Thirteen men, including Carboni, were tried for high treason in 1855. All were found not guilty.']),
  ('Evidence cards',
   ['For each card: who made it, when, for whom, and were they there?',
@@ -449,7 +489,7 @@ def presenter_page():
  <div class="presenter"><strong>Presenter note.</strong> The same structure works across Years 4 to 10. Eureka runs well with the whole room; in class, teachers choose the case for their year level, from Deep Time and Batavia (Year 4) to the Freedom Ride (Year 10). <em>Frontier</em> (the Bathurst War and Myall Creek) is suited to Year 8/9.</div>
  <div class="lesson">
   <div class="lesson-step"><span class="ls-time">5 min</span><h4>Open the envelope</h4><p>Read the opener aloud. Ask: what do we think we already know? Write it up, to test later.</p></div>
-  <div class="lesson-step"><span class="ls-time">10 min</span><h4>Read the agreed file</h4><p>Students mark what is agreed and what is still disputed. Teach any new words.</p></div>
+  <div class="lesson-step"><span class="ls-time">10 min</span><h4>Read what is established</h4><p>Students mark what reliable sources have established and what is still disputed. Teach any new words.</p></div>
   <div class="lesson-step"><span class="ls-time">15 min</span><h4>Evidence stations</h4><p>Print the evidence cards. Groups rotate, noting who made each source, when, and for whom.</p></div>
   <div class="lesson-step"><span class="ls-time">15 min</span><h4>Ask three witnesses</h4><p>Same three questions for every witness. Compare answers across groups.</p></div>
   <div class="lesson-step"><span class="ls-time">10 min</span><h4>Bias Button</h4><p>Each group presses the button on one source and reports one loaded word and one missing voice.</p></div>

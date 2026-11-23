@@ -127,3 +127,17 @@
  .presenter-page .session{break-before:page}
  .presenter-page .why h2{break-after:avoid}
 }
+
+/* established facts + bibliography */
+.est-head .bib-link{font-weight:700;font-size:.92rem;margin-left:6px;white-space:nowrap}
+sup.ref{font:700 .7rem system-ui,sans-serif;margin-left:2px}
+sup.ref a{color:#2c4a7a;text-decoration:none;padding:0 2px}
+sup.ref + sup.ref::before{content:",";color:#2c4a7a}
+.bib{padding-top:50px;padding-bottom:20px}
+.bib-list{max-width:900px;padding-left:1.6em;margin:12px 0}
+.bib-list li{margin:0 0 12px;line-height:1.5;overflow-wrap:anywhere}
+.bib-list li:target{background:#fff6d9;outline:2px solid #e0be82;border-radius:6px}
+.bib-plain{list-style:disc}
+.bib-sup{display:block;font-size:.86rem;color:#5c5148}
+.bib-list a{color:#7c2938}
+@media print{.bib{break-before:page;padding:0}.bib-list li{break-inside:avoid;font-size:9.5pt}.bib-list a::after{content:" " attr(href);font-size:7.5pt;color:#333;word-break:break-all}.est-head .bib-link{display:none}}
