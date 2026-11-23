@@ -5,7 +5,7 @@ from html import escape as e
 from parts import pic, ta, bias_panel, evidence_card, witness_card, BIAS_INV
 from content import CASES
 
-V = '20261123h1'
+V = '20261123k1'
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 C = {c['id']: c for c in CASES}
 EU = C['eureka']
@@ -229,7 +229,6 @@ def page():
      <h1 id="h-title">Eureka</h1>
      <p class="env-sub">{e(EU['question'])}</p>
      <p class="tagline">Real people. Real records. Real questions the record never settled.</p>
-     <div class="hero-actions"><a class="btn btn-primary" href="#investigate">Investigate Eureka</a><a class="btn" href="#case-eureka">Open the Eureka file</a></div>
     </div>
    </div>
    <span class="stamp" aria-hidden="true">Case reopened</span>
